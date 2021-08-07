@@ -61,11 +61,19 @@ app.use(express.urlencoded({extended: false}));
 app.post('/api/shorturl/', function(req, res) {  
   let testUrl = req.body.url;
   let urlFound = false;
+  let validHttp = false;
   let resObj = {};
   console.log(testUrl);
   
-  
   if (validUrl.isUri(testUrl)){
+    if (testUrl.search(/^http/i) < 0){
+      validHttp = false;
+    } else {
+      validHttp = true;
+    }
+  }
+  
+  if (validHttp){
     console.log(testUrl + ' - looks like an URI');
     for (let x in myShortUrl){
       console.log(myShortUrl[x]);
@@ -89,7 +97,7 @@ app.post('/api/shorturl/', function(req, res) {
   } 
   else {    
       console.log(testUrl + ' - not a URI');
-      resObj = {error: "Invalid URL"};
+      resObj = {error: "invalid url"};
   }
 
   res.json(resObj);
